@@ -32,5 +32,19 @@ pipeline
                 
             }
         }
+        stage("Build Maven Project")
+        {
+            steps
+            {
+                sh 'mvn clean package'
+            }
+        }
+        stage("Build Maven Test")
+        {
+            steps
+            {
+                sh 'mvn test'
+            }
+        }
     }
 }
