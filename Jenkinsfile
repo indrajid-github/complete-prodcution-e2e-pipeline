@@ -68,7 +68,7 @@ pipeline
             steps
             {
                 def qa = waitForQualityGate()
-                if(qa.status =! 'OK')
+                if(qa.status != 'OK')
                 {
                     error "Pipeline aborted due to quality gate failure: ${qg.status}"
                 }
