@@ -106,6 +106,13 @@ pipeline
                     }
                 }
             }
+            post
+            {
+                success
+                {
+                   sh 'docker images ls'
+                }
+            }
         }
     }
 }
