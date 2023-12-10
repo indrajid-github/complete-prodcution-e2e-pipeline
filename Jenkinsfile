@@ -12,6 +12,18 @@ pipeline
         maven 'maven3'
         jdk 'jdk17'
     }
+    environment
+    {
+        // For docker cred
+        DOCKER_USER = "uriyapraba"
+        DOCKER_PASS = "dockerhub"
+        //App name and release
+        APP_NAME = "complete-prodcution-e2e-pipeline"
+        RELEASE = "1.0.0"
+        //For Docker image and tag
+        IMAGE_NAME = "${DOCKER_USER }" + "/" + "${APP_NAME}"
+        IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+    }
     stages
     {
         stage("Cleanup workspace")
@@ -59,11 +71,11 @@ pipeline
                 }
             }
         }
-        stage("Quality Gate")
+        stage("Quality Gate") // sonarqube webhook is neccesory to create to send the response 
         {
             options
             {
-                timeout(time: 100, unit: 'SECONDS')
+                timeout(time: 100, unit: 'SECONDS') //If the step is not satisfied within 100 sec's, then the build will be aborted
             }
             steps
             {
@@ -73,6 +85,24 @@ pipeline
                     if(qa.status != 'OK')
                     {
                         error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }
+        }
+        stage("Build and Push Docker Image")
+        {
+            steps
+            {
+                script
+                {
+                    docker.withRegistry('https://index.docker.io/v2/', 'DOCKER_PASS') 
+                    {
+                        docker_image = docker.build("${IMAGE_NAME}")      
+                    }
+                    docker.withRegistry('https://index.docker.io/v2/', 'DOCKER_PASS') 
+                    {
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')     
                     }
                 }
             }
