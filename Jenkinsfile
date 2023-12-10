@@ -95,14 +95,14 @@ pipeline
             {
                 script
                 {
-                    //docker.withRegistry('https://index.docker.io/v2/', DOCKER_PASS) 
-                    //{
-                        docker_image = docker.build("${IMAGE_NAME}")      
-                    //}
-                    docker.withRegistry('https://index.docker.io/v2/', DOCKER_PASS) 
+                    docker.withRegistry('', DOCKER_PASS) 
                     {
-                        docker_image.push "${IMAGE_TAG}"
-                        docker_image.push 'latest'     
+                        docker_image = docker.build("${IMAGE_NAME}")      
+                    }
+                    docker.withRegistry('', DOCKER_PASS) 
+                    {
+                        docker_image.push("${IMAGE_TAG}")
+                        //docker_image.push 'latest'     
                     }
                 }
             }
