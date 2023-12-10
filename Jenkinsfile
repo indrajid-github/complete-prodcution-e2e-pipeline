@@ -110,7 +110,8 @@ pipeline
             {
                 success
                 {
-                   sh 'docker images ls'
+                   sh "docker image rm ${IMAGE_NAME}:${IMAGE_TAG}"
+                   sh "docker image rm ${IMAGE_NAME}:latest" 
                 }
             }
         }
