@@ -122,7 +122,7 @@ pipeline
             {
                 script
                 {
-                    sh "curl -vk --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'http://52.63.129.235:8080/job/github-complete-pipeline/buildWithParameters?token=github'"
+                    sh "curl -vk --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'http://52.63.129.235:8080/job/github-complete-pipeline/build?token=github'"
                 }
             }
         }
