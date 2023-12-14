@@ -23,6 +23,7 @@ pipeline
         //For Docker image and tag
         IMAGE_NAME = "${DOCKER_USER }" + "/" + "${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+        JENKINS_API_TOKEN = credentials('JENKINS_API_TOKEN')
     }
     stages
     {
@@ -112,6 +113,16 @@ pipeline
                 {
                    sh "docker image rm ${IMAGE_NAME}:${IMAGE_TAG}"
                    sh "docker image rm ${IMAGE_NAME}:latest" 
+                }
+            }
+        }
+        stage("Trigger CD")
+        {
+            steps
+            {
+                script
+                {
+                    sh "curl -vk --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-cache' -H 'content-type: application/x-www-form-urlencoded' --data 'IMAGE_TAG=${IMAGE_TAG}' 'http://52.63.129.235:8080/job/github-complete-pipeline/buildWithParameters?token=github'"
                 }
             }
         }
